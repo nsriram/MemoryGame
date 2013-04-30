@@ -30,17 +30,21 @@ $(function () {
     };
 
     $('.tile').bind('click', function () {
+        var tile = $(this);
+        var isOpened = tile.hasClass("open");
+
         var openedCards = $('.open');
         if (openedCards.length == 2) {
             handleOpenedCards(openedCards);
+            if (isOpened)
+                return;
         }
-        var tile = $(this);
         var cardNumber = this.id;
 
         var cardImage = cards[cardNumber];
         var isClosed = tile.hasClass("closed");
 
-        var isOpened = tile.hasClass("open");
+
         if (isClosed) {
             flipCards(tile, "closed", "open", cardImage);
         }
