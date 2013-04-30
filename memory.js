@@ -8,22 +8,41 @@ $(function () {
     var controller = new Leap.Controller();
     console.log('Leap initialized');
 
+    var flipCards = function (card, removeClass, addClass, image) {
+        card.removeClass(removeClass);
+        card.addClass(addClass);
+        card.css("background-image", image);
+    };
+
+    var handleOpenedCards = function (openedCards) {
+        var card1Image = $(openedCards[0]).css("background-image");
+        var card2Image = $(openedCards[1]).css("background-image");
+        if (card1Image === card2Image) {
+            openedCards.unbind('click');
+            $(openedCards[0]).removeClass("open");
+            $(openedCards[1]).removeClass("open");
+        } else {
+            openedCards.forEach(
+                function (card, index) {
+                    flipCards($(card), "open", "closed", blank);
+                });
+        }
+    };
+
     $('.tile').bind('click', function () {
+        var openedCards = $('.open');
+        if (openedCards.length == 2) {
+            handleOpenedCards(openedCards);
+        }
         var tile = $(this);
         var cardNumber = this.id;
+
         var cardImage = cards[cardNumber];
+        var isClosed = tile.hasClass("closed");
 
-        var isClosed  = tile.hasClass("closed");
-        console.log(isClosed);
-
+        var isOpened = tile.hasClass("open");
         if (isClosed) {
-            tile.removeClass("closed");
-            tile.addClass("open");
-            tile.css("background-image", cardImage);
-        } else {
-            tile.removeClass("open");
-            tile.addClass("closed");
-            tile.css("background-image", blank);
+            flipCards(tile, "closed", "open", cardImage);
         }
     });
 
