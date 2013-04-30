@@ -85,8 +85,8 @@ $(function () {
     Leap.loop(function (frame) {
         if (frame.fingers.length == 1 && frame.fingers[0].handId != -1) {
             var finger = frame.fingers[0];
-            if ((finger.tipVelocity[0] < 15 && finger.tipVelocity[0] > -15) &&
-                (finger.tipVelocity[1] < 15 && finger.tipVelocity[1] > -15)) {
+            if ((finger.tipVelocity[0] < 5 && finger.tipVelocity[0] > -5) &&
+                (finger.tipVelocity[1] < 5 && finger.tipVelocity[1] > -5)) {
 
                 var x = finger.tipPosition[0];
                 var y = finger.tipPosition[1];
