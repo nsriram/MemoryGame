@@ -1,0 +1,31 @@
+.row {
+    clear: both;
+    perspective: 1000;
+}
+
+.tile {
+    height: 250px;
+    width: 300px;
+    margin: 4px;
+    float: left;
+    display: block;
+    background-size: contain;
+    -o-transition: all .4s ease-in-out;
+    -ms-transition: all .4s ease-in-out;
+    -moz-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.closed {
+    background-image: url(blank.jpg);
+    -webkit-transform: rotateY(-180deg);
+    -moz-transform: rotateY(-180deg);
+    transform: rotateY(-180deg);
+}
+
+.open {
+    -webkit-transform: rotateY(0deg);
+    -moz-transform: rotateY(0deg);
+    transform: rotateY(0deg);
+}
