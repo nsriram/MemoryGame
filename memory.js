@@ -3,6 +3,7 @@ $(function () {
     var batman = "url(batman.jpg)";
     var blank = "url(blank.jpg)";
     var cards = [joker, batman, joker, batman, joker, batman, joker, batman];
+
     console.log('App ready');
 
     var controller = new Leap.Controller();
@@ -50,9 +51,48 @@ $(function () {
         }
     });
 
+    var mapImageId = function (leapX, leapY) {
+        var screenX = 175 + leapX;
+        var screenY = 350 - leapY;
+        console.log("screenX, screenY=" + screenX + "," + screenY);
+
+        var winMaxX = $(document).width();
+        var winMaxY = $(document).height();
+        console.log("winMaxX, winMaxY = " + winMaxX + "," + winMaxY);
+
+        var screenXMax = 350;
+        var screenYMax = 350;
+
+        var winX = (screenX * winMaxX) / screenXMax;
+        var winY = (screenY * winMaxY) / screenYMax;
+        console.log("winX, winY = " + winX + "," + winY);
+
+        var cols = 4;
+
+        var row = Math.ceil(winY / 250) - 1;
+        var col = Math.ceil(winX / 300) - 1;
+        console.log("row,col = " + row + "," + col);
+
+        return (row * cols) + (col);
+    };
+
+    var handleTap = function (gesture, index) {
+        if (gesture.type === 'screenTap') {
+            var tapPosition = gesture.position;
+            var x = tapPosition[0];
+            var y = tapPosition[1];
+
+
+            var imageId = mapImageId(x, y);
+
+            console.log(imageId);
+            $('#' + imageId).click();
+        }
+    };
+
     Leap.loop({enableGestures:true}, function (frame) {
         if (frame.gestures && frame.gestures.length > 0) {
-            console.log(frame.gestures);
+            frame.gestures.forEach(handleTap);
         }
     });
 });
