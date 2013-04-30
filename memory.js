@@ -4,10 +4,10 @@ $(function () {
     var blank = "url(blank.jpg)";
     var cards = [joker, batman, joker, batman, joker, batman, joker, batman];
 
-    console.log('App ready');
+    //console.log('App ready');
 
     var controller = new Leap.Controller();
-    console.log('Leap initialized');
+    //console.log('Leap initialized');
 
     var flipCards = function (card, removeClass, addClass, image) {
         card.removeClass(removeClass);
@@ -52,47 +52,50 @@ $(function () {
     });
 
     var mapImageId = function (leapX, leapY) {
-        var screenX = 175 + leapX;
-        var screenY = 350 - leapY;
-        console.log("screenX, screenY=" + screenX + "," + screenY);
+        console.log("leapX, leapY=" + leapX + "," + leapY);
+        var screenXMax = 440;
+        var screenYMax = 305;
 
+        var screenX = screenXMax / 2 + leapX;
+        var screenY = screenYMax - leapY;
+
+        //console.log("screenX, screenY=" + screenX + "," + screenY);
         var winMaxX = $(document).width();
         var winMaxY = $(document).height();
-        console.log("winMaxX, winMaxY = " + winMaxX + "," + winMaxY);
 
-        var screenXMax = 350;
-        var screenYMax = 350;
+        //console.log("winMaxX, winMaxY = " + winMaxX + "," + winMaxY);
 
         var winX = (screenX * winMaxX) / screenXMax;
         var winY = (screenY * winMaxY) / screenYMax;
-        console.log("winX, winY = " + winX + "," + winY);
+        //console.log("winX, winY = " + winX + "," + winY);
 
         var cols = 4;
 
-        var row = Math.ceil(winY / 250) - 1;
-        var col = Math.ceil(winX / 300) - 1;
-        console.log("row,col = " + row + "," + col);
+        var imageWidth = 270;
+        var imageHeight = 304;
+
+        var row = Math.ceil(winY / imageWidth) - 1;
+        var col = Math.ceil(winX / imageHeight) - 1;
+
+        //console.log("row,col = " + row + "," + col);
 
         return (row * cols) + (col);
     };
 
-    var handleTap = function (gesture, index) {
-        if (gesture.type === 'screenTap') {
-            var tapPosition = gesture.position;
-            var x = tapPosition[0];
-            var y = tapPosition[1];
+    Leap.loop(function (frame) {
+        if (frame.fingers.length == 1 && frame.fingers[0].handId != -1) {
+            var finger = frame.fingers[0];
+            if ((finger.tipVelocity[0] < 15 && finger.tipVelocity[0] > -15) &&
+                (finger.tipVelocity[1] < 15 && finger.tipVelocity[1] > -15)) {
 
+                var x = finger.tipPosition[0];
+                var y = finger.tipPosition[1];
+                if ((x < 220 && x > -220) && (y < 305 && y > 0)) {
+                    var imageId = mapImageId(x, y);
+                    $('#' + imageId).click();
+                }
 
-            var imageId = mapImageId(x, y);
-
-            console.log(imageId);
-            $('#' + imageId).click();
-        }
-    };
-
-    Leap.loop({enableGestures:true}, function (frame) {
-        if (frame.gestures && frame.gestures.length > 0) {
-            frame.gestures.forEach(handleTap);
+            }
         }
     });
 });
