@@ -11,11 +11,18 @@ $(function () {
     var cols = 4;
 
     var onePixelInMM = 0.264583;
-    var winMaxX = $(document).width();
-    var winMaxY = $(document).height();
+    var maxTipVelocity = 5.0;
+
+    var winMaxX = $(window).width();
+    var winMaxY = $(window).height();
 
     var screenXMax = winMaxX * onePixelInMM;
     var screenYMax = winMaxY * onePixelInMM;
+    console.log("screenXMax="+screenXMax+",screenYMaX= "+screenYMax);
+
+    var imageWidth = $(document).width()/4.18;
+    var imageHeight = $(document).height()/4.18;
+    console.log("imageWidth="+imageWidth+",imageHeight="+imageHeight);
 
     var controller = new Leap.Controller();
 
@@ -62,41 +69,53 @@ $(function () {
     });
 
     var mapImageId = function (leapX, leapY) {
-        //console.log("leapX, leapY=" + leapX + "," + leapY);
+        console.log("leapX, leapY=" + leapX + "," + leapY);
 
         var screenX = screenXMax / 2 + leapX;
         var screenY = screenYMax - leapY;
-        //console.log("screenX, screenY=" + screenX + "," + screenY);
+        console.log("screenX, screenY=" + screenX + "," + screenY);
 
         var winX = (screenX * winMaxX) / screenXMax;
         var winY = (screenY * winMaxY) / screenYMax;
-        //console.log("winX, winY = " + winX + "," + winY);
+        console.log("winX, winY = " + winX + "," + winY);
 
-        var imageWidth = 160;
-        var imageHeight = 304;
+        var colsLeft = Math.floor(winX / imageWidth);
+        var rowsAbove = Math.floor(winY / imageHeight);
 
-        var row = Math.ceil(winY / imageWidth) - 1;
-        var col = Math.ceil(winX / imageHeight) - 1;
+        console.log("row,col = " + rowsAbove + "," + colsLeft);
 
-        //console.log("row,col = " + row + "," + col);
+        return (rowsAbove * 4) + (colsLeft);
+    };
 
-        return (row * cols) + (col);
+    var isWithinVelocityLimits = function(x){
+        return x < maxTipVelocity && x > -(maxTipVelocity);
     };
 
     Leap.loop(function (frame) {
         if (frame.fingers.length == 1 && frame.fingers[0].handId != -1) {
+        console.log(frame.fingers);
+
             var finger = frame.fingers[0];
-            if ((finger.tipVelocity[0] < 5 && finger.tipVelocity[0] > -5) &&
-                (finger.tipVelocity[1] < 5 && finger.tipVelocity[1] > -5)) {
+
+/*
+            var x1 = finger.tipPosition[0];
+            var y1 = finger.tipPosition[1];
+            console.log("x=" +x1+", y="+y1);
+*/
+
+            if (isWithinVelocityLimits(finger.tipVelocity[0]) &&
+                isWithinVelocityLimits(finger.tipVelocity[1])) {
 
                 var x = finger.tipPosition[0];
                 var y = finger.tipPosition[1];
-                //console.log((screenXMax/2) +","+screenYMax+",x="+x+",y="+y);
-                if ((x < screenXMax / 2 && x > -(screenXMax / 2)) && (y < screenYMax && y > 0)) {
+                console.log((screenXMax/2) +","+screenYMax+",x="+x+",y="+y);
+                if ((x < screenXMax / 2) &&
+                    (x > -(screenXMax / 2)) &&
+                    (y < screenYMax) &&
+                    (y > 0)) {
                     var imageId = mapImageId(x, y);
                     $('#' + imageId).click();
                 }
-
             }
         }
     });
