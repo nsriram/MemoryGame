@@ -2,12 +2,18 @@ $(function () {
     var joker = "url(joker.jpg)";
     var batman = "url(batman.jpg)";
     var blank = "url(blank.jpg)";
-    var cards = [joker, batman, joker, batman, joker, batman, joker, batman];
+    var cards = [joker, batman, joker, batman, joker, batman, joker, batman,
+        joker, batman, joker, batman, joker, joker, joker, joker];
+    var cols = 4;
 
-    //console.log('App ready');
+    var onePixelInMM = 0.264583;
+    var winMaxX = $(document).width();
+    var winMaxY = $(document).height();
+
+    var screenXMax = winMaxX * onePixelInMM;
+    var screenYMax = winMaxY * onePixelInMM;
 
     var controller = new Leap.Controller();
-    //console.log('Leap initialized');
 
     var flipCards = function (card, removeClass, addClass, image) {
         card.removeClass(removeClass);
@@ -52,26 +58,17 @@ $(function () {
     });
 
     var mapImageId = function (leapX, leapY) {
-        console.log("leapX, leapY=" + leapX + "," + leapY);
-        var screenXMax = 440;
-        var screenYMax = 305;
+        //console.log("leapX, leapY=" + leapX + "," + leapY);
 
         var screenX = screenXMax / 2 + leapX;
         var screenY = screenYMax - leapY;
-
         //console.log("screenX, screenY=" + screenX + "," + screenY);
-        var winMaxX = $(document).width();
-        var winMaxY = $(document).height();
-
-        //console.log("winMaxX, winMaxY = " + winMaxX + "," + winMaxY);
 
         var winX = (screenX * winMaxX) / screenXMax;
         var winY = (screenY * winMaxY) / screenYMax;
         //console.log("winX, winY = " + winX + "," + winY);
 
-        var cols = 4;
-
-        var imageWidth = 270;
+        var imageWidth = 160;
         var imageHeight = 304;
 
         var row = Math.ceil(winY / imageWidth) - 1;
@@ -90,7 +87,8 @@ $(function () {
 
                 var x = finger.tipPosition[0];
                 var y = finger.tipPosition[1];
-                if ((x < 220 && x > -220) && (y < 305 && y > 0)) {
+                //console.log((screenXMax/2) +","+screenYMax+",x="+x+",y="+y);
+                if ((x < screenXMax / 2 && x > -(screenXMax / 2)) && (y < screenYMax && y > 0)) {
                     var imageId = mapImageId(x, y);
                     $('#' + imageId).click();
                 }
