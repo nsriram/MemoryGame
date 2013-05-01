@@ -1,9 +1,13 @@
 $(function () {
     var joker = "url(joker.jpg)";
     var batman = "url(batman.jpg)";
+    var harvey = "url(harvey.jpg)";
+    var commissioner = "url(commissioner.jpg)";
+    var robin = "url(robin.jpg)";
     var blank = "url(blank.jpg)";
-    var cards = [joker, batman, joker, batman, joker, batman, joker, batman,
-        joker, batman, joker, batman, joker, joker, joker, joker];
+
+    var cards = [harvey, batman, harvey, robin, joker, batman, joker, batman,
+        joker, batman, joker, robin, commissioner, joker, commissioner, joker];
     var cols = 4;
 
     var onePixelInMM = 0.264583;
