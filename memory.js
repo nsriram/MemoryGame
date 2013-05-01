@@ -4,10 +4,15 @@ $(function () {
     var harvey = "url(harvey.jpg)";
     var commissioner = "url(commissioner.jpg)";
     var robin = "url(robin.jpg)";
+    var batwoman = "url(batwoman.jpg)";
+    var ducard = "url(ducard.jpg)";
+    var bane = "url(bane.jpg)";
     var blank = "url(blank.jpg)";
 
-    var cards = [harvey, batman, harvey, robin, joker, batman, joker, batman,
-        joker, batman, joker, robin, commissioner, joker, commissioner, joker];
+    var cards = [harvey, batman, robin, joker,commissioner, batwoman, bane, ducard];
+    cards = cards.concat(cards);
+    console.log(cards.length);
+    cards.sort(function() { return 0.5 - Math.random() });
     var cols = 4;
 
     var onePixelInMM = 0.264583;
