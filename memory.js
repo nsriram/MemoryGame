@@ -18,11 +18,11 @@ $(function () {
 
     var screenXMax = winMaxX * onePixelInMM;
     var screenYMax = winMaxY * onePixelInMM;
-    console.log("screenXMax="+screenXMax+",screenYMaX= "+screenYMax);
+    console.log("screenXMax=" + screenXMax + ",screenYMaX= " + screenYMax);
 
-    var imageWidth = $(document).width()/4.18;
-    var imageHeight = $(document).height()/4.18;
-    console.log("imageWidth="+imageWidth+",imageHeight="+imageHeight);
+    var imageWidth = $(document).width() / 4.18;
+    var imageHeight = $(document).height() / 4.18;
+    console.log("imageWidth=" + imageWidth + ",imageHeight=" + imageHeight);
 
     var controller = new Leap.Controller();
 
@@ -87,28 +87,20 @@ $(function () {
         return (rowsAbove * 4) + (colsLeft);
     };
 
-    var isWithinVelocityLimits = function(x){
+    var isWithinVelocityLimits = function (x) {
         return x < maxTipVelocity && x > -(maxTipVelocity);
     };
 
     Leap.loop(function (frame) {
         if (frame.fingers.length == 1 && frame.fingers[0].handId != -1) {
-        console.log(frame.fingers);
-
             var finger = frame.fingers[0];
-
-/*
-            var x1 = finger.tipPosition[0];
-            var y1 = finger.tipPosition[1];
-            console.log("x=" +x1+", y="+y1);
-*/
-
             if (isWithinVelocityLimits(finger.tipVelocity[0]) &&
                 isWithinVelocityLimits(finger.tipVelocity[1])) {
 
                 var x = finger.tipPosition[0];
                 var y = finger.tipPosition[1];
-                console.log((screenXMax/2) +","+screenYMax+",x="+x+",y="+y);
+
+                console.log((screenXMax / 2) + "," + screenYMax + ",x=" + x + ",y=" + y);
                 if ((x < screenXMax / 2) &&
                     (x > -(screenXMax / 2)) &&
                     (y < screenYMax) &&
