@@ -9,14 +9,16 @@ $(function () {
     var bane = "url(bane.jpg)";
     var blank = "url(blank.jpg)";
 
-    var cards = [harvey, batman, robin, joker,commissioner, batwoman, bane, ducard];
+    var cards = [harvey, batman, robin, joker, commissioner, batwoman, bane, ducard];
     cards = cards.concat(cards);
     console.log(cards.length);
-    cards.sort(function() { return 0.5 - Math.random() });
+    cards.sort(function () {
+        return 0.5 - Math.random()
+    });
     var cols = 4;
 
     var onePixelInMM = 0.264583;
-    var maxTipVelocity = 5.0;
+    var maxTipVelocity = 10.0;
 
     var winMaxX = $(window).width();
     var winMaxY = $(window).height();
@@ -104,8 +106,6 @@ $(function () {
 
                 var x = finger.tipPosition[0];
                 var y = finger.tipPosition[1];
-
-                console.log((screenXMax / 2) + "," + screenYMax + ",x=" + x + ",y=" + y);
                 if ((x < screenXMax / 2) &&
                     (x > -(screenXMax / 2)) &&
                     (y < screenYMax) &&
