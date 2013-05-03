@@ -9,27 +9,26 @@ $(function () {
     var bane = "url(bane.jpg)";
     var blank = "url(blank.jpg)";
 
-    var cards = [harvey, batman, robin, joker, commissioner, batwoman, bane, ducard];
+    var currentImageId = -1;
+
+    var cards = [harvey, batman, robin, joker, commissioner, batwoman, bane, ducard, harvey, batman, robin, joker, commissioner, batwoman, bane, ducard, commissioner, batwoman, bane, ducard];
     cards = cards.concat(cards);
-    console.log(cards.length);
     cards.sort(function () {
         return 0.5 - Math.random()
     });
-    var cols = 4;
+    var cols = 6;
 
     var onePixelInMM = 0.264583;
-    var maxTipVelocity = 10.0;
+    var maxTipVelocity = 50.0;
 
     var winMaxX = $(window).width();
     var winMaxY = $(window).height();
 
     var screenXMax = winMaxX * onePixelInMM;
     var screenYMax = winMaxY * onePixelInMM;
-    console.log("screenXMax=" + screenXMax + ",screenYMaX= " + screenYMax);
 
-    var imageWidth = $(document).width() / 4.18;
-    var imageHeight = $(document).height() / 4.18;
-    console.log("imageWidth=" + imageWidth + ",imageHeight=" + imageHeight);
+    var imageWidth = $(document).width() / 6.25;
+    var imageHeight = $(document).height() / 6.25;
 
     var controller = new Leap.Controller();
 
@@ -76,22 +75,22 @@ $(function () {
     });
 
     var mapImageId = function (leapX, leapY) {
-        console.log("leapX, leapY=" + leapX + "," + leapY);
+//        console.log("leapX, leapY=" + leapX + "," + leapY);
 
         var screenX = screenXMax / 2 + leapX;
         var screenY = screenYMax - leapY;
-        console.log("screenX, screenY=" + screenX + "," + screenY);
+//        console.log("screenX, screenY=" + screenX + "," + screenY);
 
         var winX = (screenX * winMaxX) / screenXMax;
         var winY = (screenY * winMaxY) / screenYMax;
-        console.log("winX, winY = " + winX + "," + winY);
+//        console.log("winX, winY = " + winX + "," + winY);
 
         var colsLeft = Math.floor(winX / imageWidth);
         var rowsAbove = Math.floor(winY / imageHeight);
 
-        console.log("row,col = " + rowsAbove + "," + colsLeft);
+//        console.log("row,col = " + rowsAbove + "," + colsLeft);
 
-        return (rowsAbove * 4) + (colsLeft);
+        return (rowsAbove * cols) + (colsLeft);
     };
 
     var isWithinVelocityLimits = function (x) {
@@ -99,19 +98,22 @@ $(function () {
     };
 
     Leap.loop(function (frame) {
-        if (frame.fingers.length == 1 && frame.fingers[0].handId != -1) {
-            var finger = frame.fingers[0];
-            if (isWithinVelocityLimits(finger.tipVelocity[0]) &&
-                isWithinVelocityLimits(finger.tipVelocity[1])) {
+        if (frame.pointables.length == 1) {
+            var finger = frame.pointables[0];
+            var xVelocity = finger.tipVelocity[0];
+            var yVelocity = finger.tipVelocity[1];
+            if (isWithinVelocityLimits(xVelocity) &&
+                isWithinVelocityLimits(yVelocity)) {
 
                 var x = finger.tipPosition[0];
                 var y = finger.tipPosition[1];
-                if ((x < screenXMax / 2) &&
-                    (x > -(screenXMax / 2)) &&
-                    (y < screenYMax) &&
-                    (y > 0)) {
+                if ((x < screenXMax / 2) && (x > -(screenXMax / 2)) &&
+                    (y < screenYMax) && (y > 0)) {
                     var imageId = mapImageId(x, y);
-                    $('#' + imageId).click();
+                    if (imageId !== currentImageId) {
+                        $('#' + imageId).click();
+                        currentImageId = imageId;
+                    }
                 }
             }
         }

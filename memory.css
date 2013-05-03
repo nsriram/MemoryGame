@@ -4,8 +4,8 @@
 }
 
 .tile {
-    height: 24%;
-    width: 24%;
+    height: 16%;
+    width: 16%;
     margin: 4px;
     float: left;
     display: block;
