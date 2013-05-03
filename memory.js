@@ -1,21 +1,51 @@
 $(function () {
+    var symbol = "url(batsymbol.gif)";
     var joker = "url(joker.jpg)";
+    var joker2 = "url(joker2.jpg)";
+    var joker3 = "url(joker3.jpg)";
+    var joker4 = "url(joker4.jpg)";
     var batman = "url(batman.jpg)";
+    var batman2 = "url(batman2.jpg)";
+    var bike = "url(bike.jpg)";
+    var tumbler = "url(tumbler.jpg)";
     var harvey = "url(harvey.jpg)";
     var commissioner = "url(commissioner.jpg)";
     var robin = "url(robin.jpg)";
     var batwoman = "url(batwoman.jpg)";
     var ducard = "url(ducard.jpg)";
     var bane = "url(bane.jpg)";
-    var blank = "url(blank.jpg)";
+    var luciusfox = "url(luciusfox.jpg)";
+    var rachel = "url(rachel.jpg)";
+    var alfred = "url(alfred.jpeg)";
 
+    var blank = "url(blank.jpg)";
     var currentImageId = -1;
 
-    var cards = [harvey, batman, robin, joker, commissioner, batwoman, bane, ducard, harvey, batman, robin, joker, commissioner, batwoman, bane, ducard, commissioner, batwoman, bane, ducard];
+    var cards = [harvey, batman, robin, joker, commissioner, batwoman, bane, ducard, luciusfox, rachel, alfred, bike,
+        tumbler, symbol, joker2, joker3, batman2, joker4];
     cards = cards.concat(cards);
     cards.sort(function () {
         return 0.5 - Math.random()
     });
+
+    Handlebars.registerHelper('mutipletimes', function (n, multiple, block) {
+        var accum = '';
+        var start = n * multiple;
+        for (var i = start; i < (start + n); ++i) {
+            accum += block.fn(i);
+        }
+        return accum;
+    });
+
+
+    var applyTemplate = function (template, data) {
+        var template = $("script[name=" + template + "]").html();
+        console.log(Handlebars.compile(template));
+        $(".board").append(Handlebars.compile(template)(data));
+    };
+
+    applyTemplate("tile", {});
+
     var cols = 6;
 
     var onePixelInMM = 0.264583;
