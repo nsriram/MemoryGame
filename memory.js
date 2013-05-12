@@ -20,14 +20,13 @@ $(function () {
 
     var blank = "url(blank.jpg)";
     var currentImageId = -1;
+    var totalClicks = 0;
 
     var cards = [harvey, batman, robin, joker, commissioner, batwoman, bane, ducard, luciusfox, rachel, alfred, bike,
         tumbler, symbol, joker2, joker3, batman2, joker4];
-    cards = cards.concat(cards);
-    cards.sort(function () {
-        return 0.5 - Math.random()
-    });
 
+    cards = cards.concat(cards);
+    
     Handlebars.registerHelper('mutipletimes', function (n, multiple, block) {
         var accum = '';
         var start = n * multiple;
@@ -45,6 +44,56 @@ $(function () {
     };
 
     applyTemplate("tile", {});
+
+    var gameOver = function() {
+        alert("totalClicks = "+totalClicks);
+        $('.discovered').forEach(
+            function(card,index) {
+                flipCards($(card),"discovered","closed",blank);    
+            }
+        );
+        $('.open').forEach(
+            function (card,index) {
+                flipCards($(card),"open","closed",blank);
+            }
+        )
+        init();
+    }
+
+    var init = function() {
+        totalClicks = 0;
+        cards.sort(function () {
+            return 0.5 - Math.random()
+        });
+
+        $('.tile').bind('click', function () {
+            var tile = $(this);
+            var isOpened = tile.hasClass("open");
+
+            var openedCards = $('.open');
+            if (openedCards.length == 2) {
+                handleOpenedCards(openedCards);
+                if (isOpened)
+                    return;
+            }
+            var cardNumber = this.id;
+
+            var cardImage = cards[cardNumber];
+            var isClosed = tile.hasClass("closed");
+
+
+            if (isClosed) {
+                totalClicks++;
+                flipCards(tile, "closed", "open", cardImage);
+            }
+
+            if($('.closed').length === 0) {
+                gameOver();
+            }
+        });
+    };
+
+    init();
 
     var cols = 6;
 
@@ -75,6 +124,8 @@ $(function () {
             openedCards.unbind('click');
             $(openedCards[0]).removeClass("open");
             $(openedCards[1]).removeClass("open");
+            $(openedCards[0]).addClass("discovered");
+            $(openedCards[1]).addClass("discovered");
         } else {
             openedCards.forEach(
                 function (card, index) {
@@ -82,27 +133,6 @@ $(function () {
                 });
         }
     };
-
-    $('.tile').bind('click', function () {
-        var tile = $(this);
-        var isOpened = tile.hasClass("open");
-
-        var openedCards = $('.open');
-        if (openedCards.length == 2) {
-            handleOpenedCards(openedCards);
-            if (isOpened)
-                return;
-        }
-        var cardNumber = this.id;
-
-        var cardImage = cards[cardNumber];
-        var isClosed = tile.hasClass("closed");
-
-
-        if (isClosed) {
-            flipCards(tile, "closed", "open", cardImage);
-        }
-    });
 
     var mapImageId = function (leapX, leapY) {
 //        console.log("leapX, leapY=" + leapX + "," + leapY);
